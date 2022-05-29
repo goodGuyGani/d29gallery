@@ -4,7 +4,7 @@ include('includes/header.php');
 include('includes/navbar.php'); 
 ?>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
 <div class="modal fade" id="addadminprofile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -83,6 +83,50 @@ include('includes/navbar.php');
 </div>
 
 
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+       
+       $('.delete_btn').click(function (e){
+           e.preventDefault();
+           
+           
+           var id = $(this).val();
+           
+           swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover user!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    method: "POST",
+                    url: "code.php",
+                    data: {
+                        'delete_id': id,
+                        'delete_btn': true
+                    },
+                    
+                }).then( () => {
+            swal("Done!","Your Data Is Deleted","success");
+            setTimeout("location.href = '';", 800);
+    
+});
+            } 
+});
+           
+           
+       })
+        
+    });
+</script>
+
+
 <div class="container-fluid">
 
 <!-- DataTales Example -->
@@ -115,12 +159,12 @@ include('includes/navbar.php');
   <div class="card-body">
     <?php
     if(isset($_SESSION['success']) && $_SESSION['success'] !=''){
-      echo '<h2 class="bg-primary text-white"> '.$_SESSION['success'].' </h2>';
+      echo '<h2 class="bg-info text-white text-center"> '.$_SESSION['success'].' </h2>';
       unset($_SESSION['success']);
     }
 
     if(isset($_SESSION['status']) && $_SESSION['status'] !=''){
-      echo '<h2 class="bg-danger text-white"> '.$_SESSION['status'].' </h2>';
+      echo '<h2 class="bg-info text-white text-center"> '.$_SESSION['status'].' </h2>';
       unset($_SESSION['status']);
     }
     ?>
@@ -202,10 +246,13 @@ include('includes/navbar.php');
                 </form>
             </td>
             <td>
-                <form action="code.php" method="post">
+                <!--<form action="code.php" method="post">
                   <input type="hidden" name="delete_id" value="<?php echo $row['USER_ID']; ?>">
-                  <button type="submit" name="delete_btn2a" class="btn btn-danger"> DELETE</button>
-                </form>
+                  <button type="submit" name="delete_btn" class="btn btn-danger"> DELETE</button>
+                </form>-->
+                
+                
+                <button type="submit" class="btn btn-danger delete_btn" value="<?php echo $row['USER_ID']; ?>"> DELETE</button>
             </td>
           </tr>
 

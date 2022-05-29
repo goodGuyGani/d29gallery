@@ -7,7 +7,7 @@ include('includes/navbar.php');
 <style type="text/css">
 @import url("https://rsms.me/inter/inter.css");
 *{
-    text-transform: capitalize;
+   
 }
 :root {
   --color-gray: #737888;
@@ -107,18 +107,16 @@ include('includes/navbar.php');
 
 
   <div class="container" style="margin-left: 50px;margin-right:50px;width:1000px">
-  <h1>Edit Order</h1>
-  <p>Edit the order information.</p>
-  <hr>
+  
   
   <?php
     if(isset($_SESSION['success']) && $_SESSION['success'] !=''){
-      echo '<h2 class="bg-primary text-white"> '.$_SESSION['success'].' </h2>';
+      echo '<h2 class="bg-info text-white text-center"> '.$_SESSION['success'].' </h2>';
       unset($_SESSION['success']);
     }
 
     if(isset($_SESSION['status']) && $_SESSION['status'] !=''){
-      echo '<h2 class="bg-danger text-white"> '.$_SESSION['status'].' </h2>';
+      echo '<h2 class="bg-info text-white text-center"> '.$_SESSION['status'].' </h2>';
       unset($_SESSION['status']);
     }
     ?>
@@ -135,133 +133,74 @@ function YNconfirm() {
 };
 </script>
 <?php
-$transaction_id = $_GET['id'];
-$_SESSION['aaaa'] = $transaction_id;
-$query_category1="SELECT transaction_id,user_id,art_id,courier_name,courier_contact,delivery_date,shipping_status,ordered_date,ordered_no,total_price,shipping_area,shipping_municipal,shipping_province,shipping_zipcode,shipping_brgy,shipping_street,shipping_house_num FROM buy_transaction
-where transaction_id = '$transaction_id'";
+$order_id = $_GET['id'];
+$_SESSION['aaaa'] = $order_id;
+$query_category1="SELECT * FROM orders,user WHERE ORDER_ID = '$order_id' AND user.USER_ID = orders.USER_ID";
 
 $result_category1 = mysqli_query($conn,$query_category1);
  while($row1 = mysqli_fetch_array($result_category1)){
-    $id = $row1['transaction_id'];
-    $user_id = $row1['user_id'];
-    $art_id = $row1['art_id'];
-    $courier_name = $row1['courier_name'];
-    $courier_contact = $row1['courier_contact'];
-    $ordered_date = $row1['ordered_date'];
-    $delivery_date = $row1['delivery_date'];
-    $ordered_no = $row1['ordered_no'];
-    $total_price = $row1['total_price'];
-      $shipping_area = $row1['shipping_area'];
-      $shipping_municipal = $row1['shipping_municipal'];
-      $shipping_province = $row1['shipping_province'];
-      $shipping_zipcode = $row1['shipping_zipcode'];
-      $shipping_brgy = $row1['shipping_brgy'];
-      $shipping_street = $row1['shipping_street'];
-      $shipping_house_num = $row1['shipping_house_num'];
-      $shipping_status = $row1['shipping_status'];
+    $id = $row1['ORDER_ID'];
+    $user_id = $row1['USER_ID'];
+    $artworks = $row1['ORDER_PRODUCTS'];
+    $name = $row1['ORDER_NAME'];
+    $contact = $row1['ORDER_PHONE'];
+    $ordered_date = $row1['ORDER_DATE'];
+    $delivery_date = $row1['DELIVERY_DATE'];
+    $amount = $row1['ORDER_AMOUNT'];
+    $address = $row1['ORDER_ADDRESS'];
+    $order_status = $row1['ORDER_STATUS'];
+    $email = $row1['ORDER_EMAIL'];
 
-      $total_price = number_format($total_price);
-/*
-      echo '
-      <div class="fields fields--2">
-      <label class="field">
-      <span class="field__label" for="" style="font-size: 12px;font-weight: bold;color:black">Transaction ID</span>
-      '.$id.'
-      <input class="field__input" type="text" />
-    </label>
+      $amount = number_format($amount);
 
-    <label class="field">
-      <span class="field__label" for="" style="font-size: 12px;font-weight: bold;color:black">User ID</span>
-      '.$user_id.'
-      <input class="field__input" type="text" />
-    </label>
-
-    <label class="field">
-      <span class="field__label" for="" style="font-size: 12px;font-weight: bold;color:black">Art ID</span>
-      ' .$art_id.'
-      <input class="field__input" type="text" />
-    </label>
-
-    <label class="field">
-      <span class="field__label" for="" style="font-size: 12px;font-weight: bold;color:black">Courier Name</span>
-      '.$courier_name.'
-      <input class="field__input" type="text" />
-    </label>
-
-    <label class="field">
-      <span class="field__label" for="" style="font-size: 12px;font-weight: bold;color:black">Courier Contact</span>
-      0'.$courier_contact.'
-      <input class="field__input" type="text" />
-    </label>
-
-    <label class="field">
-      <span class="field__label" for="" style="font-size: 12px;font-weight: bold;color:black">Ordered Date</span>
-      '.$ordered_date.'
-      <input class="field__input" type="text" />
-    </label>
-
-    <label class="field">
-      <span class="field__label" for="" style="font-size: 12px;font-weight: bold;color:black">Shipping Address</span>
-      '.$shipping_house_num.','.$shipping_street.' '.$shipping_brgy.', '.$shipping_municipal.', '.$shipping_province.'. '.$shipping_area.',Philippines
-      <input class="field__input" type="text" />
-    </label>
-
-    <label class="field">
-      <span class="field__label" for="" style="font-size: 12px;font-weight: bold;color:black">Total Price</span>
-      '.$total_price.'
-      <input class="field__input" type="text" />
-    </label>
-
-    <label class="field">
-    <span class="field__label" for="" style="font-size: 12px;font-weight: bold;color:black">Delivery Date</span>
-    <input class="field__input" type="text" id="delivery_date" required name="delivery_date" value="'.$delivery_date.'" placeholder="Enter Delivery Date"/>
-  </label>
-
-
-  <label class="field">
-    <span class="field__label" for="" style="font-size: 12px;font-weight: bold;color:black">Shipping Status</span>
-    <input class="field__input" type="text" required name="shipping_status" value="'.$shipping_status.'" placeholder="Enter Delivery Date"/>
-  </label>
-
-      </div>
-      <input class="button" style="margin-top:30px" type="submit" name="submit" value="Save">
-
-      </form>
-      </div>
-      ';*/
 
 
 
 
  echo '
+ 
+        <h1>Order #'.$id.'</h1>
+        <p>Order Information.</p><button class="button" onclick="window.print()" style="position:relative;left:80%;width:20%">Print</button>
+        <hr>
+ 
         <div class="border">
 
-            <label class="field">Transaction ID: '.$id.'</label>
+            <label class="field">Order ID: '.$id.'</label>
 
-            <label class="field">UserID:'.$user_id.'</label>
+            <label class="field">User ID: '.$user_id.'</label>
 
-            <label class="field">Art ID: ' .$art_id.'</label>
+            <label class="field">Artwork(s): <div style="font-weight:bold">' .$artworks.'</div></label>
             
-            <label class="field">Courier Name: '.$courier_name.'</label>
+            <label class="field">Courier Name: '.$name.'</label>
+            
+            <label class="field">Courier Email: '.$email.'</label>
 
-            <label class="field">Courier Contact: 0'.$courier_contact.'</label>
+            <label class="field">Courier Contact: '.$contact.'</label>
 
             <label class="field">Ordered Date: '.$ordered_date.'</label>
 
-            <label class="field">Total Price: '.$total_price.'</label>
+            <label class="field">Total Amount: Php '.$amount.'</label>
 
-            <label class="field">Shipping address: '.$shipping_house_num.','.$shipping_street.' '.$shipping_brgy.', '.$shipping_municipal.', '.$shipping_province.'. '.$shipping_area.',Philippines</label>
+            <label class="field">Shipping address: '.$address.'</label>
 
             
+           <input type="hidden" name="user_id" value="'.$user_id.'">
+           <input type="hidden" name="email" value="'.$email.'">
+           <input type="hidden" name="address" value="'.$address.'">
 
+           <label class="field">Delivery Date:<input class="textbox" type="date" id="delivery_date" name="delivery_date" value="'.$delivery_date.'" style="border:none;"></label>
 
-           <label class="field">Delivery Date:<input class="textbox" type="text" id="delivery_date" name="delivery_date" value="'.$delivery_date.'"></label>
-
-           <label class="field">Shipping Status:
-           <select id="shipping_status" name="shipping_status" class="field__input">
-                    <option value="Processing">Processing</option>
+           <label class="field">Shipping Status: <i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:98%;bottom:-20px"></i>
+           ';
+           if($order_status == 'Pending'){
+               echo '
+               <select id="order_status" name="order_status" class="field__input" style="color:black;background-color:white">
+                    <option value="Pending" style="color:black">Pending</option>
+                    <option value="Shipping">Shipping</option>
                     <option value="Delivered">Delivered</option>
-              </select></label>
+                    <option value="Cancelled">Cancelled</option>
+              </select>
+              </label>
         
 
              
@@ -269,7 +208,60 @@ $result_category1 = mysqli_query($conn,$query_category1);
                 </div>
 
         </form>
-    </p>
+    </p>';
+           } else if($order_status == 'Shipping'){
+               echo '
+               <select id="order_status" name="order_status" class="field__input" style="color:black;background-color:white">
+                    <option value="Shipping">Shipping</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Pending" style="color:black">Pending</option>
+                    <option value="Cancelled">Cancelled</option>
+              </select>
+              </label>
+        
+
+             
+                <input class="button" type="submit" name="submit" value="Save">
+                </div>
+
+        </form>
+    </p>';
+           } else if($order_status == 'Delivered'){
+               echo '
+               <select id="order_status" name="order_status" class="field__input" style="color:black;background-color:white">
+                    <option value="Delivered">Delivered</option>
+                    <option value="Pending" style="color:black">Pending</option>
+                    <option value="Shipping">Shipping</option>
+                    <option value="Cancelled">Cancelled</option>
+              </select>
+              </label>
+        
+
+             
+                <input class="button" type="submit" name="submit" value="Save">
+                </div>
+
+        </form>
+    </p>';
+           } else{
+               echo '
+               <select id="order_status" name="order_status" class="field__input" style="color:black;background-color:white">
+                    <option value="Cancelled">Cancelled</option>
+                    <option value="Pending" style="color:black">Pending</option>
+                    <option value="Shipping">Shipping</option>
+                    <option value="Delivered">Delivered</option>
+              </select>
+              </label>
+        
+
+             
+                <input class="button" type="submit" name="submit" value="Save">
+                </div>
+
+        </form>
+    </p>';
+           }
+           '
 
 
 

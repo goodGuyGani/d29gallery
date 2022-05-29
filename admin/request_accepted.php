@@ -4,6 +4,8 @@ include('includes/header.php');
 include('includes/navbar.php'); 
 ?>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
 <script>
 function YNconfirm() {
     if (window.confirm('Are you sure you want to delete this Comment?'))
@@ -13,6 +15,53 @@ function YNconfirm() {
     else
         return false;
 };
+</script>
+
+
+
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+       
+       $('.delete_request').click(function (e){
+           e.preventDefault();
+           
+           
+           var id = $(this).val();
+           
+           swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this request!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    method: "POST",
+                    url: "code.php",
+                    data: {
+                        'delete_id': id,
+                        'delete_request': true
+                    },
+                    
+                }).then( () => {
+            swal("Done!","Your Data Is Deleted","success");
+            
+            setTimeout("location.href = '';", 1000);
+    
+});
+            } 
+});
+           
+           
+       })
+        
+    });
 </script>
 
 <div class="container-fluid">
@@ -116,13 +165,15 @@ function YNconfirm() {
 
           <tr>
             <td><?php echo $row['COM_ID']; ?></td>
-            <td align="center"><?php echo '<img src="../pictures/profile/'.$row['User_imagepath'].'" width="100px;" height="100px;" alt="Image" style="object-fit: cover;">' ?>
-            <?php echo $row['USER_FNAME']; ?> <?php echo $row['USER_LNAME']; ?>
+            <td align="center"><?php echo '<img src="../pictures/profile/'.$row['User_imagepath'].'" width="100px;" height="100px;" alt="Image" style="object-fit: cover;">' ?><br>
+            <?php echo $row['USER_FNAME']; ?> <?php echo $row['USER_LNAME']; ?><br>
             
-            <form action="code.php" method="post" style="padding:10px;margin-top:20px">
+            <!--<form action="code.php" method="post" style="padding:10px;margin-top:20px">
                 <input type="hidden" name="delete_id" value="<?php echo $row['COM_ID']; ?>">
                 <button type="submit" name="delete_request" class="btn btn-danger"> DELETE</button>
-            </form>
+            </form>-->
+            
+            <button type="submit" class="btn btn-danger delete_request" value="<?php echo $row['COM_ID']; ?>">DELETE</button>
             
             </td>
             <?php

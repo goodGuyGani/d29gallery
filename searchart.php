@@ -280,12 +280,17 @@ SETTINGS
 
 
                   <select id="Category" name="Category" style="width: 200px;">
+<?php
 
+    $query3 = "SELECT * FROM category";
+    $result3 = mysqli_query($conn, $query3);
+
+
+?>
                   <option value="">Category</option>
-                 <option value="Digital Art">Digital Art</option>
-                 <option value="Painting">Painting</option>
-                 <option value="Drawing">Drawing</option>
-                 <option value="Photography">Photography</option>
+                  <?php while($row3 = mysqli_fetch_array($result3)):; ?>
+                  <option value="<?php echo $row3['CAT_NAME']; ?>"><?php echo $row3['CAT_NAME']; ?></option>
+                  <?php endwhile; ?>
                   </select>
 
                  <input class="myBtn" type="submit" name="submit" value="Search" style="font-family: 'Sans-serif'; background-color:#fd3e50;">
@@ -303,14 +308,14 @@ $category = $_POST['Category'];
 
 
 if($category == ''){
-    $query_category="SELECT art_work.art_imagepath,art_work.art_id, art_work.art_title,art_work.art_price, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_category, art_work.USER_ID
+    $query_category="SELECT art_work.art_imagepath,art_work.art_id, art_work.art_title,art_work.art_price, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_category, art_work.USER_ID, art_work.art_media
                          FROM art_work,user
-                        where art_work.user_id = user.user_id AND (art_work.art_title LIKE '%$search%') GROUP BY art_work.art_id ORDER BY art_work.art_title DESC
+                        where art_work.user_id = user.user_id AND CONCAT(art_work.art_title, art_work.art_media, user.user_fname, user.user_lname, art_work.art_description) LIKE '%$search%'  GROUP BY art_work.art_id ORDER BY art_work.art_title DESC
                             ";
 }else{
 $query_category="SELECT art_work.art_imagepath,art_work.art_id, art_work.art_title,art_work.art_price, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_category, art_work.USER_ID
                          FROM art_work,user
-                        where art_work.user_id = user.user_id AND (art_category = '$category') AND (art_work.art_title LIKE '%$search%') GROUP BY art_work.art_id ORDER BY art_work.art_title DESC
+                        where art_work.user_id = user.user_id AND (art_category = '$category') AND CONCAT(art_work.art_title, art_work.art_media, user.user_fname, user.user_lname, art_work.art_description) LIKE '%$search%' GROUP BY art_work.art_id ORDER BY art_work.art_title DESC
                             ";
 }
             $result_category = mysqli_query($conn,$query_category);

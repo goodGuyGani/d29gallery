@@ -397,6 +397,18 @@ SETTINGS
     </nav>
   </div>
   
+  <?php
+    if(isset($_SESSION['success']) && $_SESSION['success'] !=''){
+      echo '<h2 class="soldbutton" style="width:100%;height: 50px; text-align:center;border-radius:0px;cursor: none;"> '.$_SESSION['success'].' </h2>';
+      unset($_SESSION['success']);
+    }
+
+    if(isset($_SESSION['status']) && $_SESSION['status'] !=''){
+      echo '<h2 class="soldbutton" style="width:100%;height: 50px; text-align:center;border-radius:0px;cursor: none;"> '.$_SESSION['status'].' </h2>';
+      unset($_SESSION['status']);
+    }
+    ?>
+  
   
   
 <?php 
@@ -420,7 +432,7 @@ function YNconfirm() {
 };
 </script>
 
-<form action="shipping.php" method="POST">
+<form action="code.php" method="POST">
 <?php
 error_reporting(0);
 $query_category1="SELECT ART_IMAGEPATH,art_category FROM art_work WHERE art_id = '$art_id'";
@@ -434,6 +446,8 @@ $query_category1="SELECT ART_IMAGEPATH,art_category FROM art_work WHERE art_id =
                         <div class="row">
                           <div class="col-lg-6">
                             <img class="w-100 shadow" id="myImg" src="pictures/arts/'.$row['ART_IMAGEPATH'].'" height="100%" width="100%" style="object-fit: cover; max-height: 700px"/>
+                            
+                            <input type="hidden" name="art_image" value="pictures/arts/'.$row['ART_IMAGEPATH'].'">
                         </div>
                         
                         <div id="myModal" class="modal">
@@ -469,7 +483,7 @@ span.onclick = function() {
 
 
 
-$query_category="SELECT art_work.art_id, art_work.art_title,art_work.art_price, user.user_id, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_width,art_work.art_height,art_work.art_media,art_work.art_category,user.user_contact,art_work.art_thickness,art_work.art_status,art_work.art_stock
+$query_category="SELECT art_work.art_id, art_work.art_title,art_work.art_price, user.user_id, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_width,art_work.art_height,art_work.art_media,art_work.art_category,user.user_contact,art_work.art_thickness,art_work.art_status,art_work.art_stock, art_work.art_extra
                          FROM art_work,user
                         where art_work.user_id = user.user_id AND
                             art_id = '$art_id'";
@@ -497,8 +511,26 @@ $query_category="SELECT art_work.art_id, art_work.art_title,art_work.art_price, 
             echo '<!--<p class="head-title" style="color:#fd3e50">'. $row['art_title'].'</p>-->
             
 
-                  <p class="artist">Artist: <a href="artist_info.php?id='.$row['user_id'].'" style="color: #333333;">'.$row['user_fname'].' '.$row['user_mname'].' '.$row['user_lname'].'</a><br>Category: '.$row['art_category'].'<br>Dimension: '.$row['art_width'].' x '.$row['art_height'].' x '.$row['art_thickness'].'<br></p>';
-if($row['art_status'] == 'SOLD'){
+                  <p class="artist">Artist: <a href="artist_info.php?id='.$row['user_id'].'" style="color: #333333;">'.$row['user_fname'].' '.$row['user_mname'].' '.$row['user_lname'].'</a><br>Category: '.$row['art_category'].'<br>Dimension: '.$row['art_width'].' x '.$row['art_height'].' x '.$row['art_thickness'].'<br>';
+                  
+if($row['art_extra'] == 'Made To Order'){
+    echo '
+        <div style="background-color: #161f5e;color:white;border-radius:30px;padding:5px;text-align:center; font-size: 20px;">'.$row['art_extra'].'</div></p>
+    ';
+} else if($row['art_extra'] == 'Available On Hand'){
+    echo '
+        <div style="background-color: crimson;color:white;border-radius:30px;padding:5px;text-align:center; font-size: 20px;">'.$row['art_extra'].'</div></p>
+    ';
+} else if($row['art_extra'] == 'Rush Sale'){
+    echo '
+        <div style="background-color: #b22222;color:white;border-radius:30px;padding:5px;text-align:center; font-size: 20px;">'.$row['art_extra'].'</div></p>
+    ';
+} else{
+    echo '</p>';
+}
+                  
+                  
+if($row['art_status'] == 'SOLD' || $row['art_status'] == 'Sold' ){
    $row['art_price'] = number_format($row['art_price']);
     echo '<p class="soldbutton">'.$row['art_status'].' for<br> Php '.$row['art_price'].'</form>';
 }
@@ -506,8 +538,16 @@ else if($row['art_status'] == 'AVAILABLE' && $row['art_stock'] == 0){
        echo '<p class="soldbutton"> SOLD OUT <br> Php. '.$row['art_price'].'</form>';
      }
 else{
-       $row['art_price'] = number_format($row['art_price']);
-       echo '<input  class="buybutton" type="submit" name="buy" value="Buy for Php '.$row['art_price'].'"></form>';
+       $price = number_format($row['art_price']);
+       echo '
+            <input type="hidden" name="user_id" value="'. $user_id .'">
+            <input type="hidden" name="art_id" value="'. $art_id .'">
+            <input type="hidden" name="art_title" value="'. $row['art_title'].'">
+            <input type="hidden" name="art_artist" value="'.$row['user_fname'].' '.$row['user_lname'].'">
+            <input type="hidden" name="art_price" value="'.$row['art_price'].'">
+            <input type="hidden" name="art_quantity" value="1">
+            
+            <input  class="buybutton" type="submit" name="addcartbtn" value="Add To Cart for Php '.$price.'"></form>';
      }
 
 echo '

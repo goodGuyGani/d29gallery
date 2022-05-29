@@ -232,6 +232,20 @@ hr {
   background-color: #333;
 }
 
+/* hide arrows
+ Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield !important;
+}
+
+
 </style>
 <body>
 
@@ -279,16 +293,30 @@ hr {
     
   <label class="field">
     <span class="field__label" for="price" style="font-size: 12px;font-weight: bold;color:black">Price</span>
-    <input class="field__input" type="number" step="1000" min="0" id="Street" required name="price" placeholder="Enter Artwork Price"/>
+    <input class="field__input" type="number" min="0" id="Street" required name="price" placeholder="Enter Artwork Price"/>
   </label>
+  
+  
+<?php
+
+    $query3 = "SELECT * FROM category";
+    $result3 = mysqli_query($conn, $query3);
+
+
+?>
+  
   <label class="field">
-    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Category</span>
-    <?php $art_category = $_GET['art_category'];
-            $_SESSION['art_category'] = $art_category;
-                    echo ' '. $art_category;
-            ?>
-    <input class="field__input" type="hidden" id=""/>
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Category<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:86%;bottom:-20px"></i></span>
+    <select id="area" name="category" class="field__input">
+                    <option value="" disabled>Select Category</option>
+                    <?php while($row3 = mysqli_fetch_array($result3)):; ?>
+                    <option value="<?php echo $row3['CAT_NAME']; ?>"><?php echo $row3['CAT_NAME']; ?></option>
+                    <?php endwhile; ?>
+
+              </select>
   </label>
+  
+  
   <label class="field">
     <span class="field__label" for="stock" style="font-size: 12px;font-weight: bold;color:black">Artwork Stock</span>
     <input class="field__input" type="number" min="1" id="bday" value="1" required name="stock" placeholder="Artwork Stock"/>
@@ -297,6 +325,17 @@ hr {
   <label class="field">
     <span class="field__label" for="media" style="font-size: 12px;font-weight: bold;color:black">Tags</span>
     <input class="field__input" type="text" id="media" required name="media" placeholder="Artwork Tags"/>
+  </label>
+  
+  <label class="field">
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Specification<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:82%;bottom:-20px"></i></span>
+    <select id="area" name="extra" class="field__input">
+                    <option value="" disabled>Select Specification</option>
+                    <option value="None">None</option>
+                    <option value="Available On Hand">Available On Hand</option>
+                    <option value="Made To Order">Made To Order</option>
+                    <option value="Rush Sale">Rush Sale</option>
+              </select>
   </label>
   
   <label class="fields fields--3">
@@ -308,11 +347,18 @@ hr {
       <span class="field__label" for="width" style="font-size: 12px;font-weight: bold;color:black">Width</span>
       <input class="field__input" type="text" id="Mname" required name="width" />
     </label>
+    
+    
+    
     <label class="field">
-      <span class="field__label" for="house_num" style="font-size: 12px;font-weight: bold;color:black">Thickness</span>
-      <input class="field__input" type="text" type="text" id="gender" required name="thickness">
-      </input>
-    </label>
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Dimension<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:56%;bottom:-20px"></i></span>
+    <select id="area" name="thickness" class="field__input">
+                    <option value="" disabled>Select Dimension</option>
+                    <option value="Pixels">Pixels</option>
+                    <option value="Inches">Inches</option>
+              </select>
+  </label>
+    
     
     </div>
     <div class="" >

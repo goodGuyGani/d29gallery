@@ -19,12 +19,20 @@ $transaction_id = $_GET['id'];
  while($row1=mysqli_fetch_array($result1)){
     $art_stock = $row1['art_stock'];
  }
+    $order_id = $_GET['id'];
+    $user_id = $_GET['user'];
 
-
-    $delete ="DELETE FROM buy_transaction WHERE transaction_id = '$transaction_id' ";
+    $delete ="UPDATE orders SET ORDER_STATUS = 'Cancelled' WHERE ORDER_ID = '$order_id' ";
 if (mysqli_query($conn, $delete)) {
+    $query2 = "UPDATE art_work SET ART_STATE=NULL, USER_ID2=NULL, ART_STATUS = 'Available', art_stock = art_stock + 1 WHERE USER_ID2='$user_id' AND ART_STATE='Sent'";
+    $query_run2 = mysqli_query($conn, $query2);
+        
     //echo "Record updated successfully";
+    $_SESSION['success'] = "Order Cancelled Successfully";
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
 } else {
+    $_SESSION['success'] = "Order Not Cancelled";
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
     echo "Error updating record: " . mysqli_error($conn);
 }
 

@@ -1,6 +1,6 @@
 <?php
 session_start();
-    include("account.php");
+    include("customer-account.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -185,30 +185,28 @@ SETTINGS
 
 
        <?php
-       $tran_id = $_GET['id'];
-$query_category="SELECT buy_transaction.transaction_id,buy_transaction.delivery_date,buy_transaction.ordered_no,buy_transaction.ordered_date,buy_transaction.total_price,buy_transaction.shipping_status,user.user_email,buy_transaction.courier_name
-                         FROM art_work,user,buy_transaction
-                        where buy_transaction.art_id = art_work.art_id AND buy_transaction.user_id = user.user_id AND
-                            buy_transaction.transaction_id = '$tran_id'";
+       $order_id = $_GET['id'];
+$query_category="SELECT * FROM orders WHERE orders.ORDER_ID = '$order_id'";
         $result_category = mysqli_query($conn,$query_category);
 
         while($row=mysqli_fetch_array($result_category)){
-                        $id = $row['transaction_id'];
-                        $ordered_date = $row['ordered_date'];
-                        $shipping_date = $row['delivery_date'];
-                        $courier_name = $row['courier_name'];
-                        $shipping_status = $row['shipping_status'];
-                        if($shipping_status == 'Processing'){
+                        $id = $row['ORDER_ID'];
+                        $ordered_date = $row['ORDER_DATE'];
+                        $shipping_date = $row['DELIVERY_DATE'];
+                        $courier_name = $row['ORDER_NAME'];
+                        $shipping_status = $row['ORDER_STATUS'];
+                        $payment = $row['ORDER_PAYMENT'];
+                        if($shipping_status == 'Pending'){
 
 
       echo '
-      <button style="width: 100px;min-width:50px;margin-left:30px;margin-top:30px"><a class="" href="orders(planb).php" style="text-decoration:none;color: inherit;">Go Back</a></button>
+      <button style="width: 100px;min-width:50px;margin-left:30px;margin-top:30px"><a class="" href="orders.php" style="text-decoration:none;color: inherit;">Go Back</a></button>
 
       <div class="whiteborder" style="margin-left:auto;margin-right:auto;display:block;margin-bottom:200px">
         <h3> Dear '.$courier_name.',</h3>
 
          <p>
-            Your Order # '.$id.' has been placed on '.$ordered_date.' via Cash on Delivery if it is a Painting or Gcash if it is a Digital Art.
+            Your Order # '.$id.' has been placed on '.$ordered_date.' via '.$payment.'.
             <br><br>
 
             Note:<br><br>

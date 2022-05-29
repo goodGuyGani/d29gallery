@@ -223,7 +223,7 @@ nav{
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a {background-color: rgba(0, 0, 0, 0.5); width: 180px;}
+.dropdown-content a {background-color: rgba(0, 0, 0, 0.5); width: 200px;}
 
 .dropdown-content a:hover {background-color: #fd3e50;}
 
@@ -383,6 +383,27 @@ nav .fa{
 }
 </style>
 
+<?php
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
+
+    $user = $_SESSION['USER_ID'];
+
+    $query3 = "SELECT * FROM cart WHERE USER_ID = '$user'";
+      
+    // Execute the query and store the result set
+    $result3 = mysqli_query($conn, $query3);
+      
+    if ($result3)
+    {
+        // it return number of rows in the table.
+        $row3 = mysqli_num_rows($result3);
+        // close the result.
+    }
+    
+
+?>
 
 
 
@@ -397,7 +418,7 @@ nav .fa{
                       <div class="dropdown">
                       <li><a href="#">GALLERY</a></li>
                       <div class="dropdown-content">
-                          <a href="artworks.php">Available Artworks</a>
+                          <a href="artworks.php">All Artworks</a>
                           <a href="artworks(sold).php">Sold Artworks</a>
                       </div>
                       </div>
@@ -428,15 +449,13 @@ nav .fa{
             }
             elseif($_SESSION['user_type'] == "Artist"){
                 echo
-                 '<div class="dropdown"  style="position:relative; left: 15%">
+                 '
+                 <div class="dropdown"  style="position:relative; left: 15%">
                     <button onclick="myFunction()" class="dropbtn">' .$row['user_fname'].' '.$row['user_mname'].' '.$row['user_lname']. ''.''. '&#9660;'. '</button>'.'
                        <div id="myDropdown" class="dropdown-content">
                          <a href="my_request.php">Commission Request</a>
-                         <a href="sent_request.php">Sent Request</a>
                          <a href="myartworks_available.php">My Artworks</a>
                          <a href="myartworks_sold.php">My Sold Artworks</a>
-                         <a href="orders.php">My Orders</a>
-                         <a href="my_collection.php">My Collections</a>
                          <a href="profile.php">Account Profile</a>
                             <a href="logout.php">Log Out</a>
 
@@ -445,12 +464,13 @@ nav .fa{
             }
             else{
                 echo
-                 '<div class="dropdown"  style="position:relative; left: 15%">
+                 '
+                 <a href="cart.php" style="color:#fd3e50;position:relative;left:15%;background-color:#fd3e50;color:white;padding:5px;border-radius:5px;text-decoration:none"><i class="fas fa-shopping-cart"></i> <span style="">'.$row3.'</span></a>
+                 <div class="dropdown"  style="position:relative; left: 15%">
                     <button onclick="myFunction()" class="dropbtn">' .$row['user_fname'].' '.$row['user_mname'].' '.$row['user_lname']. ''.''. '&#9660;'. '</button>'.'
                        <div id="myDropdown" class="dropdown-content">
                          <a href="orders.php">My Orders</a>
                          <a href="sent_request.php">Sent Request</a>
-                         <a href="my_collection.php">My Collections</a>
                          <a href="profile.php">Account Profile</a>
                             <a href="logout.php">Log Out</a>
 
@@ -473,14 +493,14 @@ include("portal.php");
     </nav>
 		<div class="Content">
       <h1>LOOKING FOR ARTS?</h1>
-      <p style="font-size: 15px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua<br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</p>
-      <a href="" class="btn1">Visit Us</a>
+      <p style="font-size: 15px;">Muradkhaal Gallery is created to provide a promotional platform for different artists to share their masterpieces and an easier way to buy artwork online. <br>You can easily order or request for a commission towards an artwork</p>
+      <a href="contact.php" class="btn1">Contact Us</a>
     </div>
 
 		<div class="social">
-      <a href="#" class="fb"><img src="pictures/fb.png" style="width:20px;height:20px;"></a>
-      <a href="#" class="ig"><img src="pictures/ig.png" style="width:20px;height:20px;"></a>
-      <a href="#" class="gmail"><img src="pictures/gmail.png" style="width:35.54px;height:20px;"></a>
+      <a href="https://www.facebook.com/don.t.khaal" class="fb"><img src="pictures/fb.png" style="width:20px;height:20px;"></a>
+      <a href="https://www.instagram.com/dkhaal/" class="ig"><img src="pictures/ig.png" style="width:20px;height:20px;"></a>
+      <a href="#" class="https://mail.google.com"><img src="pictures/gmail.png" style="width:35.54px;height:20px;"></a>
     	</div>
 		</section>
 
@@ -497,7 +517,7 @@ include("portal.php");
 
     $query_category1="SELECT art_work.art_imagepath,art_work.art_id, art_work.art_title,art_work.art_price, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_status,art_work.art_category, art_work.USER_ID
             FROM art_work,user
-            where art_work.user_id = user.user_id  ORDER BY art_work.art_id DESC LIMIT 12";
+            where art_work.user_id = user.user_id AND art_work.art_status='Available'  ORDER BY art_work.art_id DESC LIMIT 12";
             $result_category1 = mysqli_query($conn,$query_category1);
             if(mysqli_num_rows($result_category1) <=0)
             {
@@ -537,9 +557,9 @@ include("portal.php");
                             </p>
                             <div class="footer-social">
                                 <a href=""><i class="fab fa-twitter"></i></a>
-                                <a href=""><i class="fab fa-facebook-f"></i></a>
-                                <a href=""><i class="fab fa-youtube"></i></a>
-                                <a href=""><i class="fab fa-instagram"></i></a>
+                                <a href="https://www.facebook.com/don.t.khaal"><i class="fab fa-facebook-f"></i></a>
+                                <a href="https://www.youtube.com/channel/UCc72TrPGoA8voRDBPpx-NjA"><i class="fab fa-youtube"></i></a>
+                                <a href="https://www.instagram.com/dkhaal/"><i class="fab fa-instagram"></i></a>
                                 <a href=""><i class="fab fa-linkedin-in"></i></a>
                             </div>
                         </div>
@@ -609,7 +629,7 @@ include("portal.php");
                         <div class="col-md-6">
                             <div class="copy-menu">
                                 <a href="about_us.php">About</a>
-                                <a href="">Terms</a>
+                                <a href="guide.php">Guide</a>
                                 <a href="contact.php">Contact</a>
                             </div>
                         </div>

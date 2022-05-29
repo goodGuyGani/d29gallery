@@ -56,14 +56,13 @@ include('includes/navbar.php');
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $start = ($page - 1) * $limit;
 
-    $query = "SELECT art_work.art_id, art_work.art_title,art_work.art_price, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_width,art_work.art_height,art_work.art_media,art_work.art_category,user.user_contact,art_work.art_thickness,buy_transaction.transaction_id,buy_transaction.delivery_date,buy_transaction.ordered_no,buy_transaction.ordered_date,buy_transaction.total_price,buy_transaction.shipping_status,user.user_email, buy_transaction.Courier_Name, buy_transaction.Courier_Contact
-                         FROM art_work,user,buy_transaction
-                        where buy_transaction.art_id = art_work.art_id AND buy_transaction.user_id = user.user_id AND SHIPPING_STATUS = 'Delivered' LIMIT $start, $limit ";
+    $query = "SELECT * FROM user,orders
+                        WHERE user.USER_ID = orders.USER_ID AND orders.ORDER_STATUS = 'Delivered' LIMIT $start, $limit ";
     $query_run = mysqli_query($conn, $query);
 
-    $result1 = $conn->query("SELECT count(TRANSACTION_ID) AS TRANSACTION_ID FROM buy_transaction");
+    $result1 = $conn->query("SELECT count(ORDER_ID) AS ORDER_ID FROM orders WHERE ORDER_STATUS = 'Delivered' ");
     $userCount = $result1->fetch_all(MYSQLI_ASSOC);
-    $total = $userCount[0]['TRANSACTION_ID'];
+    $total = $userCount[0]['ORDER_ID'];
     $pages = ceil($total / $limit);
 
     $Previous = $page - 1;
@@ -89,17 +88,17 @@ include('includes/navbar.php');
 
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <thead>
-          <tr>
+          <tr style="text-align:center">
             <th> ID </th>
-            <th>Image</th>
-            <th>Title</th>
-            <th>Price </th>
+            <th>Profile</th>
             <th>From</th>
             <th>Contact</th>
+            <th>Artwork(s)</th>
+            <th>Address</th>
+            <th>Total Amount</th>
+            <th>Order Placed</th>
             <th>Status</th>
-            <th>Delivery Date</th>
-            <th>EDIT </th>
-            <th>DELETE </th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -110,28 +109,62 @@ include('includes/navbar.php');
               ?>
 
           <tr>
-            <td><?php echo $row['transaction_id']; ?></td>
-            <td><?php echo '<img src="../pictures/arts/'.$row['art_imagepath'].'" width="100px;" height="100px;" alt="Image" style="object-fit: cover;">' ?></td>
-            <td><?php echo $row['art_title']; ?></td>
-            <td><?php echo 
-            $row['total_price'] = number_format($row['total_price']);
-            $row['total_price']; ?></td>
-            <td><?php echo $row['Courier_Name']; ?></td>
-            <td>0<?php echo $row['Courier_Contact']; ?></td>
-            <td><?php echo $row['shipping_status']; ?></td>
-            <td><?php echo $row['ordered_date']; ?> to <?php echo $row['delivery_date']; ?></td>
+            <td><?php echo $row['ORDER_ID']; ?></td>
+            <td><?php echo '<img src="../pictures/profile/'.$row['User_imagepath'].'" width="100px;" height="100px;" alt="Image" style="object-fit: cover;">' ?></td>
+            <td style="text-align:center"><?php echo $row['ORDER_NAME']; ?></td>
+            
+            <td><?php echo $row['ORDER_PHONE']; ?></td>
+            <td><?php echo $row['ORDER_PRODUCTS']; ?></td>
+            <td><?php echo $row['ORDER_ADDRESS']; ?></td>
+            
+            <td style="text-align:center">₱<?php echo 
+            $row['ORDER_AMOUNT'] = number_format($row['ORDER_AMOUNT']);
+            $row['ORDER_AMOUNT']; ?></td>
+            <td style="text-align:center"><?php echo $row['ORDER_DATE']; ?></td>
+            
+            <?php
+            if($row['ORDER_STATUS'] == "Pending"){
+                ?>
+                <td><div style="background-color: crimson;color:white;border-radius:30px;padding:5px;text-align:center"><?php echo $row['ORDER_STATUS']; ?></div>
+                </td>
+                <?php
+            }
+            else if($row['ORDER_STATUS'] == "Shipping"){
+                ?>
+                <td><div style="background-color: #161f5e;color:white;border-radius:30px;padding:5px;text-align:center"><?php echo $row['ORDER_STATUS']; ?></div>
+                </td>
+                <?php
+            }
+            else if($row['ORDER_STATUS'] == "Delivered"){
+                ?>
+                <td><div style="background-color: #29a32f;color:white;border-radius:30px;padding:5px;text-align:center"><?php echo $row['ORDER_STATUS']; ?></div>
+                </td>
+                <?php
+            }
+            else if($row['ORDER_STATUS'] == "Cancelled"){
+                ?>
+                <td><div style="background-color: #b22222;color:white;border-radius:30px;padding:5px;text-align:center"><?php echo $row['ORDER_STATUS']; ?></div>
+                </td>
+                <?php
+            }
+            ?>
+            
+            
+            
+            
+            <!--<td><?php echo $row['ORDER_DATE']; ?> to <?php echo $row['DELIVERY_DATE']; ?></td>-->
             
 
             <td>
               
-                <a class="editbtn" href="admin_editorder1.php?id=<?php echo $row['transaction_id']; ?>"> <button  type="button" name="edit_btn" class="btn btn-success"> EDIT</button></a>
+                <a class="editbtn" href="admin_editorder1.php?id=<?php echo $row['ORDER_ID']; ?>"> <button  type="button" name="edit_btn" class="btn btn-success">VIEW</button></a>
             </td>
-            <td>
+            <!--<td>
                 <form action="code.php" method="post">
-                  <input type="hidden" name="delete_id" value="<?php echo $row['transaction_id']; ?>">
+                  <input type="hidden" name="delete_id" value="<?php echo $row['ORDER_DATE']; ?>">
                   <button type="submit" name="order_delete_btn" class="btn btn-danger"> DELETE</button>
                 </form>
-            </td>
+            </td>-->
           </tr>
 
           <?php

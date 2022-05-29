@@ -222,7 +222,7 @@ nav{
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a {background-color: rgba(0, 0, 0, 0.5); width: 180px;}
+.dropdown-content a {background-color: rgba(0, 0, 0, 0.5); width: 200px;}
 
 .dropdown-content a:hover {background-color: #fd3e50;}
 
@@ -407,6 +407,29 @@ nav .fa{
       </script>
 
 <body >
+    
+<?php
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(0);
+
+
+    $user = $_SESSION['USER_ID'];
+
+    $query3 = "SELECT * FROM cart WHERE USER_ID = '$user'";
+      
+    // Execute the query and store the result set
+    $result3 = mysqli_query($conn, $query3);
+      
+    if ($result3)
+    {
+        // it return number of rows in the table.
+        $row3 = mysqli_num_rows($result3);
+        // close the result.
+    }
+    
+
+?>
 
 <div class="header" style="width: 100%">
 <nav>
@@ -449,15 +472,13 @@ nav .fa{
             }
             elseif($_SESSION['user_type'] == "Artist"){
                 echo
-                 '<div class="dropdown"  style="position:relative; left: 15%">
+                 '
+                 <div class="dropdown"  style="position:relative; left: 15%">
                     <button onclick="myFunction()" class="dropbtn">' .$row['user_fname'].' '.$row['user_mname'].' '.$row['user_lname']. ''.''. '&#9660;'. '</button>'.'
                        <div id="myDropdown" class="dropdown-content">
                          <a href="my_request.php">Commission Request</a>
-                         <a href="sent_request.php">Sent Request</a>
                          <a href="myartworks_available.php">My Artworks</a>
                          <a href="myartworks_sold.php">My Sold Artworks</a>
-                         <a href="orders.php">My Orders</a>
-                         <a href="my_collection.php">My Collections</a>
                          <a href="profile.php">Account Profile</a>
                             <a href="logout.php">Log Out</a>
 
@@ -466,15 +487,15 @@ nav .fa{
             }
             else{
                 echo
-                 '<div class="dropdown"  style="position:relative; left: 15%">
+                 '
+                 <a href="cart.php" style="color:#fd3e50;position:relative;left:15%;background-color:#fd3e50;color:white;padding:5px;border-radius:5px;text-decoration: none;"><i class="fas fa-shopping-cart"></i> <span style="">'.$row3.'</span></a>
+                 <div class="dropdown"  style="position:relative; left: 15%">
                     <button onclick="myFunction()" class="dropbtn">' .$row['user_fname'].' '.$row['user_mname'].' '.$row['user_lname']. ''.''. '&#9660;'. '</button>'.'
                        <div id="myDropdown" class="dropdown-content">
                          <a href="orders.php">My Orders</a>
                          <a href="sent_request.php">Sent Request</a>
-                         <a href="my_collection.php">My Collections</a>
                          <a href="profile.php">Account Profile</a>
                             <a href="logout.php">Log Out</a>
-
                        </div>
                   </div></div>';
             }

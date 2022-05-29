@@ -46,11 +46,12 @@ $ART_HEIGHT= $_POST['height'];
 $ART_THICKNESS= $_POST['thickness'];
 $ART_DESCRIPTION= $_POST['description'];
 $ART_DATE= $_SESSION['current_date'];
-$ART_CATEGORY = $_SESSION['art_category'];
+$ART_CATEGORY = $_POST['category'];
 $ART_MEDIA = $_POST['media'];
 $ART_PRICE= $_POST['price'];
 $id = $_SESSION['USER_ID'];
-$art_status = 'AVAILABLE';
+$art_status = 'Available';
+$ART_EXTRA = $_POST['extra'];
 if ($ART_CATEGORY == 'Sculpture'){
   $ART_STOCK = $_POST['stock'];
 }
@@ -59,7 +60,7 @@ else{
 }
 
 
-$sql="INSERT INTO art_work (ART_TITLE,ART_DESCRIPTION,ART_PRICE,ART_WIDTH,ART_HEIGHT,ART_THICKNESS,ART_CATEGORY,ART_MEDIA,ART_STATUS,ART_IMAGEPATH,user_id,art_date,ART_STOCK) VALUES('$ART_TITLE','$ART_DESCRIPTION','$ART_PRICE','$ART_WIDTH','$ART_HEIGHT','$ART_THICKNESS','$ART_CATEGORY','$ART_MEDIA','$art_status','$target_file',$id,'$ART_DATE','$ART_STOCK')";
+$sql="INSERT INTO art_work (ART_TITLE,ART_DESCRIPTION,ART_PRICE,ART_WIDTH,ART_HEIGHT,ART_THICKNESS,ART_CATEGORY,ART_MEDIA,ART_STATUS,ART_IMAGEPATH,user_id,art_date,ART_STOCK, ART_EXTRA) VALUES('$ART_TITLE','$ART_DESCRIPTION','$ART_PRICE','$ART_WIDTH','$ART_HEIGHT','$ART_THICKNESS','$ART_CATEGORY','$ART_MEDIA','$art_status','$target_file',$id,'$ART_DATE','$ART_STOCK', '$ART_EXTRA')";
 
 if (mysqli_query($conn, $sql)) {
     echo "<script type=\"text/javascript\">window.alert('You have successfully Uploaded your Artwork!');window.location.href = 'myartworks_available.php';</script>";

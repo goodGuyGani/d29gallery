@@ -279,7 +279,7 @@
                         <div class="col-md-6">
                             <div class="copy-menu">
                                 <a href="about_us.php">About</a>
-                                <a href="">Guide</a>
+                                <a href="guide.php">Guide</a>
                                 <a href="contact.php">Contact</a>
                             </div>
                         </div>

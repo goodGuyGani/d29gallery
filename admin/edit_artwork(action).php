@@ -55,13 +55,15 @@ $id = $_SESSION['USER_ID'];
 $art_status = 'AVAILABLE';
 $art_id = $_GET['id'];
 $art_stock = $_POST['stock'];
+$art_extra = $_POST['extra'];
+$art_status = $_POST['art_status'];
 /*if($ART_CATEGORY == 'Sculpture'){
   $art_stock = $_POST['stock'];
 }
 else{
   $art_stock = 1;
 }*/
-$sql="UPDATE art_work SET ART_TITLE = '$ART_TITLE',ART_DESCRIPTION = '$ART_DESCRIPTION',ART_PRICE = '$ART_PRICE',ART_WIDTH = '$ART_WIDTH',ART_HEIGHT = '$ART_HEIGHT',ART_THICKNESS ='$ART_THICKNESS',ART_CATEGORY = '$ART_CATEGORY',ART_MEDIA = '$ART_MEDIA',ART_STATUS = '$art_status', ART_DATE = '$ART_DATE', ART_STOCK = '$art_stock' WHERE ART_ID = '$art_id'";
+$sql="UPDATE art_work SET ART_TITLE = '$ART_TITLE',ART_DESCRIPTION = '$ART_DESCRIPTION',ART_PRICE = '$ART_PRICE',ART_WIDTH = '$ART_WIDTH',ART_HEIGHT = '$ART_HEIGHT',ART_THICKNESS ='$ART_THICKNESS',ART_CATEGORY = '$ART_CATEGORY',ART_MEDIA = '$ART_MEDIA',ART_STATUS = '$art_status', ART_DATE = '$ART_DATE', ART_STOCK = '$art_stock', ART_EXTRA = '$art_extra', ART_STATUS = '$art_status' WHERE ART_ID = '$art_id'";
 
 if (mysqli_query($conn, $sql)) {
     //echo "Record updated successfully";

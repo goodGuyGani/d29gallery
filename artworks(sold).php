@@ -151,12 +151,19 @@ include("includes/head.php"); ?>
 
 
                   <select id="Category" name="Category" style="width: 200px;">
+<?php
+
+    $query3 = "SELECT * FROM category";
+    $result3 = mysqli_query($conn, $query3);
+
+
+?>
+
 
                   <option value="">Category</option>
-                 <option value="Digital Art">Digital Art</option>
-                 <option value="Painting">Painting</option>
-                 <option value="Drawing">Drawing</option>
-                 <option value="Photography">Photography</option>
+                 <?php while($row3 = mysqli_fetch_array($result3)):; ?>
+                  <option value="<?php echo $row3['CAT_NAME']; ?>"><?php echo $row3['CAT_NAME']; ?></option>
+                  <?php endwhile; ?>
                   </select>
 
                  <input class="myBtn" type="submit" name="submit" value="Search" style="font-family: 'Sans-serif'; background-color:#fd3e50;">
@@ -273,7 +280,7 @@ include("includes/head.php"); ?>
 
     $query_category1="SELECT art_work.art_imagepath,art_work.art_id, art_work.art_title,art_work.art_price, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_status,art_work.art_category
             FROM art_work,user
-            where art_work.user_id = user.user_id  ORDER BY art_work.art_title ASC LIMIT 6";
+            where art_work.user_id = user.user_id AND art_work.art_status = 'sold' ORDER BY art_work.art_title ASC LIMIT 6";
             $result_category1 = mysqli_query($conn,$query_category1);
             if(mysqli_num_rows($result_category1) <=0)
             {
@@ -307,7 +314,7 @@ include("includes/head.php"); ?>
                         <div class="col-md-6">
                             <div class="copy-menu">
                                 <a href="about_us.php">About</a>
-                                <a href="">Guide</a>
+                                <a href="guide.php">Guide</a>
                                 <a href="contact.php">Contact</a>
                             </div>
                         </div>

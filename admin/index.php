@@ -4,6 +4,86 @@ include('includes/header.php');
 include('includes/navbar.php'); 
 ?>
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      
+      
+      
+    <?php
+
+    $query3 = "SELECT CAT_ID, CAT_NAME, COUNT(art_work.ART_CATEGORY) AS TOTAL FROM category, art_work WHERE category.CAT_NAME = art_work.ART_CATEGORY GROUP BY CAT_NAME";
+    $result3 = mysqli_query($conn, $query3);
+
+
+    ?>
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Artwork', 'Category'],
+          
+          <?php while($row3 = mysqli_fetch_array($result3)):; ?>
+          ['<?php echo $row3['CAT_NAME']; ?>', <?php echo $row3['TOTAL']; ?>],
+          <?php endwhile; ?>
+          
+          
+          
+        ]);
+
+        var options = {
+          title: 'Artworks',
+          is3D: true,
+          backgroundColor: '#E4E4E4',
+
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+    
+    
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      
+      
+      <?php
+            $sql = "SELECT COUNT(*) AS available from art_work WHERE ART_STATUS='Available'";
+            $result = $conn->query($sql);
+            $data =  $result->fetch_assoc();
+    ?>
+    
+    <?php
+            $sql2 = "SELECT COUNT(*) AS sold from art_work WHERE ART_STATUS='Sold'";
+            $result = $conn->query($sql2);
+            $data2 =  $result->fetch_assoc();
+    ?>
+      
+      
+      
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Artwork Status', 'Count'],
+          ['Available',     <?php echo $data['available']; ?>],
+          ['Sold',     <?php echo $data2['sold']; ?>],
+        ]);
+
+        var options = {
+          title: 'Status',
+          pieHole: 0.4,
+          backgroundColor: '#E4E4E4',
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+        chart.draw(data, options);
+      }
+    </script>
+
+
 
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -143,6 +223,9 @@ include('includes/navbar.php');
                
                ?>
 
+
+
+
             </div>
             <div class="col-auto">
               <i class="fas fa-check fa-2x text-gray-300"></i>
@@ -155,7 +238,14 @@ include('includes/navbar.php');
   </div>
 
   <!-- Content Row -->
+<div id="piechart" style="width: 100%; height: 500px;border: 1px solid #ccc"></div>
 
+
+<div style="height:10px"></div>
+  
+<div id="donutchart" style="width: 50%; height: 500px;border: 1px solid #ccc"></div>
+  
+  
 
 
 

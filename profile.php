@@ -179,23 +179,7 @@ SETTINGS
   --color-light-gray: #f7f7fa;
 }
 
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
 
-html {
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
-@supports (font-variation-settings: normal) {
-  html {
-    font-family: "Inter var", sans-serif;
-  }
-}
 
 body {
   margin: 0;

@@ -23,18 +23,6 @@ include("includes/connection.php");?>
   font-family: "source sans pro", sans-serif;
 }
 
-html {
-  font-size: 80%;
-overflow-x: hidden;
-}
-
-
-
-
-body {
-    
-padding-bottom: 6.5rem;
-}
 
 
 
@@ -404,6 +392,8 @@ SETTINGS
   </ul>
 </nav>
 
-
+<?php
+include('includes/footer.php');
+?>
 <!--</body>-->
  </html>

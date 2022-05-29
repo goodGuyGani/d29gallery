@@ -4,7 +4,51 @@ include('includes/header.php');
 include('includes/navbar.php'); 
 ?>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+       
+       $('.delete_drawing').click(function (e){
+           e.preventDefault();
+           
+           
+           var id = $(this).val();
+           
+           swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this artwork!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    method: "POST",
+                    url: "code.php",
+                    data: {
+                        'delete_id': id,
+                        'delete_drawing': true
+                    },
+                    
+                }).then( () => {
+            swal("Your Data Is Deleted");
+            location.href = ''
+    
+});
+            } 
+});
+           
+           
+       })
+        
+    });
+</script>
 
 
 
@@ -118,7 +162,21 @@ include('includes/navbar.php');
             $row['ART_PRICE']; ?></td>
             <td><?php echo $row['ART_DATE']; ?></td>
             <td><?php echo $row['ART_CATEGORY']; ?></td>
-            <td><?php echo $row['ART_STATUS']; ?></td>
+            
+            <?php
+            if($row['ART_STATUS'] == "Sold" || $row['ART_STATUS'] == "SOLD"){
+                ?>
+                <td><div style="background-color: #29a32f;color:white;border-radius:30px;padding:5px;text-align:center">Sold</div>
+                </td>
+                <?php
+            }
+            else if($row['ART_STATUS'] == "Available" || $row['ART_STATUS'] == "AVAILABLE"){
+                ?>
+                <td><div style="background-color: crimson;color:white;border-radius:30px;padding:5px;text-align:center">Available</div>
+                </td>
+                <?php
+            }
+            ?>
             
 
             <td>
@@ -126,10 +184,13 @@ include('includes/navbar.php');
                 <a class="editbtn" href="edit_artwork.php?category=<?php echo $row['ART_CATEGORY']; ?>&id=<?php echo $row['ART_ID']; ?>"> <button  type="button" name="edit_btn" class="btn btn-success"> EDIT</button></a>
             </td>
             <td>
-                <form action="code.php" method="post">
+                <!--<form action="code.php" method="post">
                   <input type="hidden" name="delete_id" value="<?php echo $row['ART_ID']; ?>">
                   <button type="submit" name="delete_drawing" class="btn btn-danger"> DELETE</button>
-                </form>
+                </form>-->
+                
+                <button type="submit" class="btn btn-danger delete_drawing" value="<?php echo $row['ART_ID'];; ?>"> DELETE</button>
+                
             </td>
           </tr>
 

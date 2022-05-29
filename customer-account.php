@@ -8,6 +8,8 @@
     <link rel="icon" type="image/png" href="pictures/mgLogo.png"/>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
     <script>
         function myFunction() {
            document.getElementById("myDropdown") .classList.toggle("show");
@@ -390,7 +392,23 @@ document.getElementById("navlink");
 </head>
 <body>
 
+<?php
+    $user = $_SESSION['USER_ID'];
 
+    $query3 = "SELECT * FROM cart WHERE USER_ID = '$user'";
+      
+    // Execute the query and store the result set
+    $result3 = mysqli_query($conn, $query3);
+      
+    if ($result3)
+    {
+        // it return number of rows in the table.
+        $row3 = mysqli_num_rows($result3);
+        // close the result.
+    }
+    
+
+?>
 
 
 <div class="header" style="width: 100%">
@@ -442,7 +460,6 @@ document.getElementById("navlink");
                          <a href="myartworks_available.php">My Artworks</a>
                          <a href="myartworks_sold.php">My Sold Artworks</a>
                          <a href="orders.php">My Orders</a>
-                         <a href="my_collection.php">My Collections</a>
                          <a href="profile.php">Account Profile</a>
                             <a href="logout.php">Log Out</a>
 
@@ -451,12 +468,13 @@ document.getElementById("navlink");
             }
             else{
                 echo
-                 '<div class="dropdown"  style="position:relative; left: 15%">
+                 '
+                 <a href="cart.php" style="color:#fd3e50;position:relative;left:15%;background-color:#fd3e50;color:white;padding:5px;border-radius:5px;text-decoration:none"><i class="fas fa-shopping-cart"></i> <span style="">'.$row3.'</span></a>
+                 <div class="dropdown"  style="position:relative; left: 15%">
                     <button onclick="myFunction()" class="dropbtn">' .$row['user_fname'].' '.$row['user_mname'].' '.$row['user_lname']. ''.''. '&#9660;'. '</button>'.'
                        <div id="myDropdown" class="dropdown-content">
                          <a href="orders.php">My Orders</a>
                          <a href="sent_request.php">Sent Request</a>
-                         <a href="my_collection.php">My Collections</a>
                          <a href="profile.php">Account Profile</a>
                             <a href="logout.php">Log Out</a>
 

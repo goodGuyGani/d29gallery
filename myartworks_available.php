@@ -186,6 +186,24 @@ SETTINGS
 .breadcrumb_type6{
   --breadcrumbDividerSize: 14px;
 }
+.soldbutton{
+            cursor: pointer;
+           margin-left:auto;
+           margin-right:auto;
+           display:block;
+          border-radius: 8px;
+           color: white;
+           font-size: 25px;
+           font-weight: bold;
+           text-align: center;
+           border: none;
+           box-shadow: 1px 1px 5px 0px rgb(0, 0, 1);
+           background-color: crimson;
+           padding: 15px;
+           width: 50%;
+           height: 70px;
+        }
+
     </style>
 
 </head>
@@ -218,6 +236,18 @@ function YNconfirm() {
       </ol>
     </div>
   </div>
+  
+  <?php
+    if(isset($_SESSION['success']) && $_SESSION['success'] !=''){
+      echo '<h2 class="soldbutton" style="width:100%; text-align:center;border-radius:0px;cursor: none;"> '.$_SESSION['success'].' </h2>';
+      unset($_SESSION['success']);
+    }
+
+    if(isset($_SESSION['status']) && $_SESSION['status'] !=''){
+      echo '<h2 class="soldbutton" style="width:100%; text-align:center;border-radius:0px;cursor: none;"> '.$_SESSION['status'].' </h2>';
+      unset($_SESSION['status']);
+    }
+    ?>
 
 
 
@@ -227,7 +257,7 @@ function YNconfirm() {
 <?php
 $id = $_SESSION['USER_ID'];
 
-  echo                '<a class="addbtn" href="select_art.php" style=""> &#10133;  Add an Artwork</a>';
+  echo                '<a class="addbtn" href="artwork_post.php" style=""> &#10133;  Add an Artwork</a>';
             $query_category="SELECT art_work.art_id, art_work.art_title,art_work.art_price, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_category
                          FROM art_work,user
                         where art_work.user_id = user.user_id AND user.user_id = '$id' AND art_work.art_status = 'Available' ORDER BY rand()";

@@ -447,11 +447,10 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
 
-
-$query_category1="SELECT art_work.art_id, art_work.art_title,art_work.art_price, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_status,buy_transaction.courier_name,buy_transaction.courier_contact,buy_transaction.shipping_province,buy_transaction.shipping_municipal,buy_transaction.shipping_street,buy_transaction.shipping_brgy,buy_transaction.shipping_house_num,art_work.art_category
-                         FROM art_work,user,buy_transaction
-                        where art_work.user_id = user.user_id AND buy_transaction.art_id = art_work.art_id   AND art_work.art_status = 'Sold' ORDER BY art_work.art_title ASC LIMIT $start, $limit";
-                        
+$query_category="SELECT art_work.art_imagepath,art_work.art_id, art_work.art_title,art_work.art_price, user.user_fname, user.user_mname,user.user_lname,art_work.art_description,art_work.art_imagepath,art_work.art_status,art_work.art_category
+            FROM art_work,user
+            where art_work.user_id = user.user_id AND art_work.art_status = 'Sold'  ORDER BY art_work.art_id DESC LIMIT $start, $limit";
+            
             $result1 = $conn->query("SELECT count(ART_ID) AS ART_ID FROM art_work WHERE art_work.art_status = 'Sold'");
             $userCount = $result1->fetch_all(MYSQLI_ASSOC);
             $total = $userCount[0]['ART_ID'];
@@ -464,31 +463,28 @@ $query_category1="SELECT art_work.art_id, art_work.art_title,art_work.art_price,
             $Next = ($page == $pages) ? $pages : $page + 1;
             
             
-            $result_category1 = mysqli_query($conn,$query_category1);
+            $result_category = mysqli_query($conn,$query_category);
             echo '<div class="image-gallery">';
- if(mysqli_num_rows($result_category1) <=0)
-        {
-            echo '<h1 align="Center" style="margin-top:150px">No Sold Artworks </h1>';
-        }
-        else{
-            while($row1 = mysqli_fetch_array($result_category1)){
-                $row1['art_price'] = number_format($row1['art_price']);
-                echo '
-                <div class="image-box" >
-            <img src="../pictures/arts/'.$row1['art_imagepath'].'" alt="img.jpg" />
+            if(mysqli_num_rows($result_category) <=0)
+{
+echo '<h1 align="Center">No Available Artworks </h1>';
+}
+else{
+while($row = mysqli_fetch_array($result_category)){
+                $row['art_price'] = number_format($row['art_price']);
+                echo '<div class="image-box" >
+            <img src="../pictures/arts/'.$row['art_imagepath'].'" alt="img.jpg" />
             <div class="overlay">
               <div class="details">
                 <h3 class="title">
-                  <a href=../info_art.php?id='.$row1['art_id'].' style="color:crimson;">'.$row1['art_title'].'</a>
+                  <a href=../info_art.php?id='.$row['art_id'].' style="color:white;">'.$row['art_title'].'</a>
                 </h3>
                 <span class="category">
-                  <a href="#" style="color:lightgray">'.$row1['art_category'].'</a><br>
-                  <a  style="color:lightgray">Php '.$row1['art_price'].'</a><br>
-                  <a  style="color:green">Sold to: '.$row1['courier_name'].'</a><br>
-                  <a  style="color:lightgray">Contact no: 0'.$row1['courier_contact'].'</a><br>
-                  <a  style="color:lightgray">Address: '.$row1['shipping_house_num'].' '.$row1['shipping_street'].' '.$row1['shipping_brgy'].',<br>'.$row1['shipping_province'].'</a><br>
-                  
-                </span>
+                <a href="#" style="color:lightgray">'.$row['user_fname'].' '.$row['user_mname'].' '.$row['user_lname'].'</a><br>
+                <a href="#" style="color:grey">Php '.$row['art_price'].'</a>
+                </span><br><br>
+                <a class="modifybtn" href="edit_artwork.php?category='.$row['art_category'].'&id='.$row['art_id'].'"> &#128393; Modify </a>
+                <br><br><a class="modifybtn" href =delete_artwork_action.php?delete='.$row['art_id'].'&pic='.$row['art_imagepath'].' onclick="return(YNconfirm());"> &#10006; Delete</a>
               </div>
             </div>
           </div>';
@@ -499,29 +495,32 @@ $query_category1="SELECT art_work.art_id, art_work.art_title,art_work.art_price,
 /*
                 echo '
 
-                <div class="space2" >
-                            <table  class="pic-table2">
+                    <div class="space" >
+                            <table  class="pic-table">
                                 <tr>
                                     <td>
-                                        <a><img class="photo" src="pictures/arts/'.$row1['art_imagepath'].'" ></a><br>'.
+                                        <a><img class="photo" src="pictures/arts/'.$row['art_imagepath'].'" ></a><br>'.
 
-                                        '<a  href=info_art.php?id='.$row1['art_id'].' class="desc-title"> '.$row1['art_title'].' </a>
+                                        '<a  href=info_art.php?id='.$row['art_id'].' class="desc-title"> '.$row['art_title'].' </a>
 
-                                         <p class="desc-content">'.$row1['art_category'].'</p>
+                                         <p class="desc-content">'.$row['art_category'].'</p>
+
+                                         <p class="desc-content" style="float: right;">P'.$row['art_price'].'.00</p> <br>
+
+                                         <p class="desc-content2">'.$row['user_fname'].' '.$row['user_mname'].' '.$row['user_lname'].'</p>
+
+                                         <p>
+                                                <a class="modifybtn" href="edit_artwork.php?category='.$row['art_category'].'&id='.$row['art_id'].'"> &#128393; Modify </a>
 
 
-                                         <p class="desc-content" style="float: right;">P'.$row1['art_price'].'.00</p> <br>
 
-                                          <p class="desc-content3"><br> Sold to: '.$row1['courier_name'].' </p>
-
-                                          <p class="desc-content3" >Contact no: 0'.$row1['courier_contact'].'<br>'.$row1['shipping_house_num'].' '.$row1['shipping_street'].' '.$row1['shipping_brgy'].','.$row1['shipping_province'].'
-                                          </p>
-
+                                                <a class="deletebtn" href =delete_artwork_action.php?delete='.$row['art_id'].'&pic='.$row['art_imagepath'].' onclick="return(YNconfirm());"> &#10006; Delete</a>
+                                        </p>
                                     </td>
                                 </tr>
                             </table>
-                        </div>';
-                        */
+                        </div>';*/
+
         }
     }
 '</div>';

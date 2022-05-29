@@ -5,7 +5,60 @@ include('includes/navbar.php');
 ?>
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+       
+       $('.delete_btn2').click(function (e){
+           e.preventDefault();
+           
+           
+           var id = $(this).val();
+           
+           swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this artwork!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    method: "POST",
+                    url: "code.php",
+                    data: {
+                        'delete_id': id,
+                        'delete_btn2': true
+                    },
+                    
+                }).then( () => {
+            swal("Your Data Is Deleted");
+            setTimeout("location.href = '';", 800);
+    
+});
+            } 
+});
+           
+           
+       })
+        
+    });
+</script>
+
+
+<?php
+
+    $query3 = "SELECT * FROM category";
+    $result3 = mysqli_query($conn, $query3);
+
+
+?>
 
 
 <div class="container-fluid">
@@ -17,6 +70,23 @@ include('includes/navbar.php');
             <a href="admin_artworks(sold)2.php"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addadminprofile">
               Artwork Grid
             </button></a>
+            <div class="form-group float-right" style="width:20%">
+                <label></label>
+                
+                <form action="cat_search2.php" method="GET">
+                <select class="custom-select" name="cat_name" id="fetchval">
+                  <option selected>Select Category</option>
+                  <?php while($row3 = mysqli_fetch_array($result3)):; ?>
+                  <option value="<?php echo $row3['CAT_NAME']; ?>"><?php echo $row3['CAT_NAME']; ?></option>
+                  <?php endwhile; ?>
+                </select>
+                
+                
+                <button type="submit" name="cat_btn" class="btn btn-primary" style="width:100%;margin-top:10px">
+              Filter
+            </button>
+            </form>
+            </div>
     </h6>
 
 <!--
@@ -118,7 +188,22 @@ include('includes/navbar.php');
             $row['ART_PRICE']; ?></td>
             <td><?php echo $row['ART_DATE']; ?></td>
             <td><?php echo $row['ART_CATEGORY']; ?></td>
-            <td><?php echo $row['ART_STATUS']; ?></td>
+            
+            
+            <?php
+            if($row['ART_STATUS'] == "Sold" || $row['ART_STATUS'] == "SOLD"){
+                ?>
+                <td><div style="background-color: #29a32f;color:white;border-radius:30px;padding:5px;text-align:center">Sold</div>
+                </td>
+                <?php
+            }
+            else if($row['ART_STATUS'] == "Available" || $row['ART_STATUS'] == "AVAILABLE"){
+                ?>
+                <td><div style="background-color: crimson;color:white;border-radius:30px;padding:5px;text-align:center">Available</div>
+                </td>
+                <?php
+            }
+            ?>
             
 
             <td>
@@ -126,10 +211,12 @@ include('includes/navbar.php');
                 <a class="editbtn" href="edit_artwork.php?category=<?php echo $row['ART_CATEGORY']; ?>&id=<?php echo $row['ART_ID']; ?>"> <button  type="button" name="edit_btn" class="btn btn-success"> EDIT</button></a>
             </td>
             <td>
-                <form action="code.php" method="post">
+                <!--<form action="code.php" method="post">
                   <input type="hidden" name="delete_id" value="<?php echo $row['ART_ID']; ?>">
                   <button type="submit" name="delete_btn2" class="btn btn-danger"> DELETE</button>
-                </form>
+                </form>-->
+                
+                <button type="submit" class="btn btn-danger delete_btn2" value="<?php echo $row['ART_ID'];; ?>"> DELETE</button>
             </td>
           </tr>
 

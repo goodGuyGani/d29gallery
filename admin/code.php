@@ -4,6 +4,113 @@ include('includes/connection.php');
 include("../functions.php");
 
 
+
+
+if(isset($_POST['delete_rating']))
+{
+    $id = $_POST['delete_id'];
+
+    $query = "DELETE FROM rating WHERE RATING_ID='$id' ";
+    $query_run = mysqli_query($conn, $query);
+
+    if($query_run)
+    {
+        $_SESSION['status'] = "Rating is Deleted";
+        $_SESSION['status_code'] = "success";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
+    else
+    {
+        $_SESSION['status'] = "Rating is NOT DELETED";       
+        $_SESSION['status_code'] = "error";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }    
+}
+
+
+
+if(isset($_POST['delete_comment']))
+{
+    $id = $_POST['delete_id'];
+
+    $query = "DELETE FROM comment WHERE COMMENT_ID='$id' ";
+    $query_run = mysqli_query($conn, $query);
+
+    if($query_run)
+    {
+        $_SESSION['status'] = "Comment is Deleted";
+        $_SESSION['status_code'] = "success";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
+    else
+    {
+        $_SESSION['status'] = "Comment is NOT DELETED";       
+        $_SESSION['status_code'] = "error";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }    
+}
+
+
+if(isset($_POST['delete_cat']))
+{
+    $id = $_POST['delete_id'];
+
+    $query = "DELETE FROM category WHERE CAT_ID='$id' ";
+    $query_run = mysqli_query($conn, $query);
+
+    if($query_run)
+    {
+        $_SESSION['status'] = "Category is Deleted";
+        $_SESSION['status_code'] = "success";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
+    else
+    {
+        $_SESSION['status'] = "Category is NOT DELETED";       
+        $_SESSION['status_code'] = "error";
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }    
+}
+
+
+
+
+if(isset($_POST['add_cat'])){
+
+
+
+
+
+  $cat_name = $_POST['cat_name'];
+
+
+
+    $query = "INSERT INTO category (CAT_NAME) VALUES ('$cat_name')";
+  $query_run = mysqli_query($conn, $query);
+
+  if($query_run){
+    //echo "Saved";
+    $_SESSION['success'] = "Category Added";
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+  }
+  else{
+    $_SESSION['status'] = "Category Not Added";
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
+
+  
+
+}
+
+
+
+
+
+
+
+
+
+
 if(isset($_POST['registerbtn'])){
 
 

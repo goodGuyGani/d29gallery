@@ -1,4 +1,5 @@
 <?php session_start();
+header("Cache-Control: max-age=300, must-revalidate"); 
 include("functions.php");
     
 if(!isset($_SESSION['USER_ID'])){
@@ -254,6 +255,21 @@ hr {
   background-color: #333;
 }
 
+
+
+/* hide arrows
+ Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield !important;
+}
+
     </style>
 </head>
 <body>
@@ -358,7 +374,7 @@ $result_category1 = mysqli_query($conn,$query_category1);
   
   <label class="field">
     <span class="field__label" for="country" style="font-size: 12px;font-weight: bold;color:black">Mobile Number</span>
-    <input class="field__input" type="text" id="" required name="contact" placeholder="09123456789" 
+    <input class="field__input" type="number" id="" required name="contact" placeholder="09123456789" 
     value="0<?php echo $contact; ?>"/>
   </label>
 

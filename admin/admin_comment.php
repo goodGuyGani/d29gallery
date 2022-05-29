@@ -4,6 +4,9 @@ include('includes/header.php');
 include('includes/navbar.php'); 
 ?>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+
 <script>
 function YNconfirm() {
     if (window.confirm('Are you sure you want to delete this Comment?'))
@@ -14,6 +17,53 @@ function YNconfirm() {
         return false;
 };
 </script>
+
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+       
+       $('.delete_comment').click(function (e){
+           e.preventDefault();
+           
+           
+           var id = $(this).val();
+           
+           swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this comment!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    method: "POST",
+                    url: "code.php",
+                    data: {
+                        'delete_id': id,
+                        'delete_comment': true
+                    },
+                    
+                }).then( () => {
+            swal("Done!","Your Data Is Deleted","success");
+            
+            setTimeout("location.href = '';", 1000);
+    
+});
+            } 
+});
+           
+           
+       })
+        
+    });
+</script>
+
+
 
 <div class="container-fluid">
 
@@ -94,7 +144,7 @@ function YNconfirm() {
 
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <thead>
-          <tr>
+          <tr style="text-align:center">
             <th> ID </th>
             <th>Image</th>
             <th>Title</th>
@@ -121,9 +171,11 @@ function YNconfirm() {
             
 
             <td>
-                <a class="delbutton" href="../delete_comment.php?id=<?php echo $row['COMMENT_ID']; ?>"onclick="return(YNconfirm());">
+                <!--<a class="delbutton" href="../delete_comment.php?id=<?php echo $row['COMMENT_ID']; ?>"onclick="return(YNconfirm());">
                   <input type="hidden"">
-                  <button class="btn btn-danger"> DELETE</button>
+                  <button class="btn btn-danger"> DELETE</button>-->
+                  
+                  <button type="submit" class="btn btn-danger delete_comment" value="<?php echo $row['COMMENT_ID']; ?>"> DELETE</button>
 
             </td>
           </tr>

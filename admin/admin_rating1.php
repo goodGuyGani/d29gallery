@@ -4,7 +4,7 @@ include('includes/connection.php');
 include('includes/navbar.php'); 
 ?>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
 <script>
 function YNconfirm() {
@@ -15,6 +15,50 @@ function YNconfirm() {
     else
         return false;
 };
+</script>
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+       
+       $('.delete_rating').click(function (e){
+           e.preventDefault();
+           
+           
+           var id = $(this).val();
+           
+           swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this rating!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    method: "POST",
+                    url: "code.php",
+                    data: {
+                        'delete_id': id,
+                        'delete_rating': true
+                    },
+                    
+                }).then( () => {
+            swal("Done!","Your Data Is Deleted","success");
+            
+            setTimeout("location.href = '';", 800);
+    
+});
+            } 
+});
+           
+           
+       })
+        
+    });
 </script>
 
 <div class="container-fluid">
@@ -121,9 +165,11 @@ function YNconfirm() {
             
 
             <td>
-                <a class="delbutton" href="../admin_deleterating.php?id=<?php echo $row['RATING_ID']; ?>"onclick="return(YNconfirm());">
+                <!--<a class="delbutton" href="../admin_deleterating.php?id=<?php echo $row['RATING_ID']; ?>"onclick="return(YNconfirm());">
                   <input type="hidden"">
-                  <button class="btn btn-danger"> DELETE</button>
+                  <button class="btn btn-danger"> DELETE</button>-->
+                  
+                  <button type="submit" class="btn btn-danger delete_rating" value="<?php echo $row['RATING_ID']; ?>">DELETE</button>
 
             </td>
           </tr>

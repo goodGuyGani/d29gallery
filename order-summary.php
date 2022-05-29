@@ -1,4 +1,6 @@
-<?php session_start();?>
+<?php session_start();
+header("Cache-Control: max-age=300, must-revalidate"); 
+?>
 
 <!DOCTYPE html>
 <html>

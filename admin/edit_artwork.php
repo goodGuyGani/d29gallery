@@ -4,7 +4,8 @@ include('includes/header.php');
 include('includes/navbar.php'); 
 ?>
 
-
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css' />
+  <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
 
 <style type="text/css">
 
@@ -214,7 +215,7 @@ $_SESSION['art_category'] = $art_category;
 <p style="margin-left:30px">Edit your artwork's information.</p>
 <?php
     if(isset($_SESSION['success']) && $_SESSION['success'] !=''){
-      echo '<h2 class="bg-info text-white text-center"> '.$_SESSION['success'].' </h2>';
+      echo '<h2 class="bg-info text-white text-center"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$_SESSION['success'].' </h2>';
       unset($_SESSION['success']);
     }
 
@@ -229,7 +230,7 @@ $_SESSION['art_category'] = $art_category;
 <?php
 $art_id = $_GET['id'];
 
-$sql = "SELECT art_media,art_title,art_imagepath,art_width,art_height,art_thickness,art_date,art_description,art_price,art_stock FROM art_work WHERE art_id = '$art_id'";
+$sql = "SELECT art_media,art_title,art_imagepath,art_width,art_height,art_thickness,art_date,art_description,art_price,art_stock, art_status, art_extra FROM art_work WHERE art_id = '$art_id'";
 $result = mysqli_query($conn,$sql);
 while($row=mysqli_fetch_array($result)){
     $art_title = $row['art_title'];
@@ -241,6 +242,8 @@ while($row=mysqli_fetch_array($result)){
     $art_price = $row['art_price'];
     $art_stock = $row['art_stock'];
     $art_media = $row['art_media'];
+    $art_status = $row['art_status'];
+    $art_extra = $row['art_extra'];
 }
 ?>
 
@@ -261,7 +264,7 @@ echo ' <form action="edit_artwork(action).php?id='.$art_id.'" enctype="multipart
 
     <label class="field">
     <span class="field__label" for="price" style="font-size: 12px;font-weight: bold;color:black">Price</span>
-    <input class="field__input" type="number" step="1000" min="0" id="Street" required name="price" placeholder="Enter Artwork Price" value="<?php echo $art_price; ?>"/>
+    <input class="field__input" type="number" min="0" id="Street" required name="price" placeholder="Enter Artwork Price" value="<?php echo $art_price; ?>"/>
   </label>
 
   <label class="field">
@@ -281,6 +284,84 @@ $_SESSION['art_category'] = $art_category;
       <span class="field__label" for="title" style="font-size: 12px;font-weight: bold;color:black">Tags</span>
       <input class="field__input" type="text"  id="media" name="media" value="<?php echo $art_media; ?>" />
     </label>
+    
+    <?php
+    if($art_extra == 'None'){
+    echo'
+    <label class="field">
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Specification<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:82%;bottom:-20px"></i></span>
+    <select id="area" name="extra" class="field__input">
+                    <option value="None">None</option>
+                    <option value="Available On Hand">Available On Hand</option>
+                    <option value="Made To Order">Made To Order</option>
+                    <option value="Rush Sale">Rush Sale</option>
+              </select>
+  </label>';
+  } else if($art_extra == 'Available On Hand'){
+      echo'
+    <label class="field">
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Specification<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:82%;bottom:-20px"></i></span>
+    <select id="area" name="extra" class="field__input">
+                    <option value="Available On Hand">Available On Hand</option>
+                    <option value="Made To Order">Made To Order</option>
+                    <option value="Rush Sale">Rush Sale</option>
+                    <option value="None">None</option>
+              </select>
+  </label>';
+  } else if($art_extra == 'Made To Order'){
+      echo'
+    <label class="field">
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Specification<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:82%;bottom:-20px"></i></span>
+    <select id="area" name="extra" class="field__input">
+                    <option value="Made To Order">Made To Order</option>
+                    <option value="Rush Sale">Rush Sale</option>
+                    <option value="Available On Hand">Available On Hand</option>
+                    <option value="None">None</option>
+              </select>
+  </label>';
+  } else if($art_extra == 'Rush Sale'){
+      echo'
+    <label class="field">
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Specification<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:72%;bottom:-20px"></i></span>
+    <select id="area" name="extra" class="field__input">
+                    <option value="Rush Sale">Rush Sale</option>
+                    <option value="Available On Hand">Available On Hand</option>
+                    <option value="Made To Order">Made To Order</option>
+                    <option value="None">None</option>
+              </select>
+  </label>';
+  } else{
+      
+  }
+  ?>
+  
+  <?php
+    
+    if($art_status == 'Available' || $art_status == 'AVAILABLE'){
+        echo '
+        <label class="field">
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Status<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:88%;bottom:-20px"></i></span>
+    <select id="area" name="art_status" class="field__input">
+                    <option value="" disabled>Select Status</option>
+                    <option value="Available">Available</option>
+                    <option value="Sold">Sold</option>
+              </select>
+  </label>
+        ';
+    } else if($art_status == 'Sold' || $art_status == 'SOLD'){
+        echo '
+        <label class="field">
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Status<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:88%;bottom:-20px"></i></span>
+    <select id="area" name="art_status" class="field__input">
+                    <option value="" disabled>Select Status</option>
+                    <option value="Sold">Sold</option>
+                    <option value="Available">Available</option>
+              </select>
+  </label>
+        ';
+    }
+    
+    ?>
 
     <label class="fields fields--3">
     <label class="field">
@@ -291,19 +372,41 @@ $_SESSION['art_category'] = $art_category;
       <span class="field__label" for="width" style="font-size: 12px;font-weight: bold;color:black">Width</span>
       <input class="field__input" type="text" id="Mname" required name="width" value="<?php echo $art_width; ?>"/>
     </label>
-    <label class="field">
-      <span class="field__label" for="house_num" style="font-size: 12px;font-weight: bold;color:black">Thickness</span>
-      <input class="field__input" type="text" type="text" id="gender" required name="thickness" value="<?php echo $art_thickness; ?>">
-      </input>
-    </label></div>
+    
+    
+    
+    
+    <?php
+    if($art_thickness == 'Pixels'){
+    echo '<label class="field">
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Dimension<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:15%;bottom:-30px"></i></span>
+    <select id="area" name="thickness" class="field__input">
+                    <option value="" disabled>Select Dimension</option>
+                    <option value="Pixels">Pixels</option>
+                    <option value="Inches">Inches</option>
+              </select>
+  </label></div>';
+    } else if($art_thickness == 'Inches'){
+    echo '<label class="field">
+    <span class="field__label" for="category" style="font-size: 12px;font-weight: bold;color:black">Dimension<i class="fa fa-chevron-down" aria-hidden="true" style="position:relative;left:15%;bottom:-30px"></i></span>
+    <select id="area" name="thickness" class="field__input">
+                    <option value="" disabled>Select Dimension</option>
+                    <option value="Inches">Inches</option>
+                    <option value="Pixels">Pixels</option>               
+              </select>
+  </label></div>';
+    }
+    ?>
 
-    <div class="fields fields--2" style="margin-top: 15px;">
-    <label class="field">
+   <div class="fields fields--2" style="margin-top: 15px;">
+    
+
+  </div>
+  
+  <label class="field">
     <span class="field__label" for="contact" style="font-size: 12px;font-weight: bold;color:black">Artwork Information</span>
     <textarea class="field__input" type="text" type="text" style="height: 200px;overflow: auto;" required name="description"  placeholder="<?php echo $art_description; ?>" value="<?php echo $art_description; ?>";></textarea>
   </label>
-
-  </div>
 
 
 <?php

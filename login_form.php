@@ -458,7 +458,7 @@ span.psw {
                       <div class="dropdown">
                       <li><a href="#">GALLERY</a></li>
                       <div class="dropdown-content">
-                          <a href="artworks.php">Available Artworks</a>
+                          <a href="artworks.php">All Artworks</a>
                           <a href="artworks(sold).php">Sold Artworks</a>
                       </div>
                       </div>
@@ -534,7 +534,7 @@ include("portal.php");
 
 
 
-  <form action = "login.php" method="POST" style="background-color: rgba(0, 0, 0, 0.5);min-width: 300px;max-width:30%;height: 430px;margin: auto;border-radius:5%;">
+  <form action = "login.php" method="POST" style="background-color: rgba(0, 0, 0, 0.5);min-width: 300px;max-width:30%;height: 480px;margin: auto;border-radius:5%;">
 <div style="text-align: center;padding-top: 30px;"><strong style="text-align: center;color:white">Sign In Here</strong></div>
   
 

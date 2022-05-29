@@ -1,4 +1,6 @@
-<?php session_start();?>
+<?php session_start();
+
+?>
 
 
 <!DOCTYPE html>
@@ -109,6 +111,39 @@ SETTINGS
 .breadcrumb_type6{
   --breadcrumbDividerSize: 14px;
 }
+
+
+.btn3{
+    background-color:#fd3e50;
+    line-height: 21px;
+    border: 2px;
+    color: white;
+    text-decoration: none;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: #fd3e50;
+    padding: 8px 23px;
+    transition: transform .4;
+}
+
+.btn3:hover{
+    background-color: #white;
+    
+}
+
+.soldbutton{
+          border-radius: 8px;
+           color: white;
+           font-size: 15px;
+           font-weight: bold;
+           text-align: center;
+           border: none;
+           box-shadow: 1px 1px 5px 0px rgb(0, 0, 1);
+           background-color: crimson;
+           padding: 15px;
+           width: 100%;
+           height: 70px;
+        }
 </style>
 
 <?php 
@@ -130,6 +165,18 @@ include("includes/head.php"); ?>
       </ol>
 </div>
   </div>
+  
+  <?php
+    if(isset($_SESSION['success']) && $_SESSION['success'] !=''){
+      echo '<h2 class="soldbutton" style="width:100%;height: 50px; text-align:center;border-radius:0px;cursor: none;"> '.$_SESSION['success'].' </h2>';
+      unset($_SESSION['success']);
+    }
+
+    if(isset($_SESSION['status']) && $_SESSION['status'] !=''){
+      echo '<h2 class="soldbutton" style="width:100%;height: 50px; text-align:center;border-radius:0px;cursor: none;"> '.$_SESSION['status'].' </h2>';
+      unset($_SESSION['status']);
+    }
+    ?>
 
         <div class="myDiv" style="text-align:center;margin-top:50px">
               <form action="searchart.php" method="POST" style="padding-bottom: 60px;">
@@ -139,12 +186,18 @@ include("includes/head.php"); ?>
 
 
                   <select id="Category" name="Category" style="width: 200px;">
+<?php
+
+    $query3 = "SELECT * FROM category";
+    $result3 = mysqli_query($conn, $query3);
+
+
+?>
 
                   <option value="">Category</option>
-                 <option value="Digital Art">Digital Art</option>
-                 <option value="Painting">Painting</option>
-                 <option value="Drawing">Drawing</option>
-                 <option value="Photography">Photography</option>
+                 <?php while($row3 = mysqli_fetch_array($result3)):; ?>
+                  <option value="<?php echo $row3['CAT_NAME']; ?>"><?php echo $row3['CAT_NAME']; ?></option>
+                  <?php endwhile; ?>
                   </select>
 
                  <input class="myBtn" type="submit" name="submit" value="Search" style="font-family: 'Sans-serif'; background-color:#fd3e50;">
@@ -161,7 +214,7 @@ $start = ($page - 1) * $limit;
             FROM art_work,user
             where art_work.user_id = user.user_id  ORDER BY ART_ID DESC LIMIT $start, $limit";
             
-            $result1 = $conn->query("SELECT count(ART_ID) AS ART_ID FROM art_work");
+            $result1 = $conn->query("SELECT count(ART_ID) AS ART_ID FROM art_work WHERE ART_STATUS = 'Available'");
             $userCount = $result1->fetch_all(MYSQLI_ASSOC);
             $total = $userCount[0]['ART_ID'];
             $pages = ceil($total / $limit);
@@ -181,7 +234,10 @@ $start = ($page - 1) * $limit;
             else{
             while($row1 = mysqli_fetch_array($result_category1))
             {
-              $row1['art_price'] = number_format($row1['art_price']);
+            if($row1['art_status'] == 'Available' || $row1['art_status'] == 'AVAILABLE'){
+                
+            
+              $price = number_format($row1['art_price']);
                 echo '<div class="image-box" >
                 <a href=info_art.php?id='.$row1['art_id'].' style="color:white;"><img src="pictures/arts/'.$row1['art_imagepath'].'" alt="img.jpg" /></a>
                 <div class="overlay">
@@ -191,11 +247,26 @@ $start = ($page - 1) * $limit;
                     </h3>
                     <span class="category">
                       <a href="artist_info.php?id='.$row1['USER_ID'].'" style="color:lightgray">'.$row1['user_fname'].' '.$row1['user_mname'].' '.$row1['user_lname'].'</a><br>
-                      <a href="#" style="color:grey">Php '.$row1['art_price'].'</a>
+                      <a href="#" style="color:grey">Php '.$price.'</a><br><br>
+
+
+                    <form action="code.php" method="POST">
+                    
+                    <input type="hidden" name="art_image" value="pictures/arts/'.$row1['art_imagepath'].'">
+                    <input type="hidden" name="art_artist" value="'.$row1['user_fname'].' '.$row1['user_lname'].'">
+                    <input type="hidden" name="user_id" value="'. $user .'">
+                    <input type="hidden" name="art_id" value="'.$row1['art_id'].'">
+                    <input type="hidden" name="art_title" value="'.$row1['art_title'].'">
+                    <input type="hidden" name="art_price" value="'.$row1['art_price'].'">
+                    <input type="hidden" name="art_quantity" value="1">
+
+                      <input  class="btn3" type="submit" name="addcartbtn" value="Add To Cart">
+                    </form>
                     </span>
                   </div>
                 </div>
               </div>';
+            }
             }
 }
 
@@ -295,7 +366,7 @@ $start = ($page - 1) * $limit;
                         <div class="col-md-6">
                             <div class="copy-menu">
                                 <a href="about_us.php">About</a>
-                                <a href="">Guide</a>
+                                <a href="guide.php">Guide</a>
                                 <a href="contact.php">Contact</a>
                             </div>
                         </div>
